@@ -1,0 +1,13 @@
+.tab-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  width: 300px;
+}
+
+body {
+  background-color: #d1c7cc; /* Đổi mã màu theo ý bạn */
+}
