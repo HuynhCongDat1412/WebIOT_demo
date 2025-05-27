@@ -13,7 +13,7 @@ const globalData = Array.from({ length: 4 }, (_, i) =>
 ({
   id: i + 1,
   name: `Sensor${i + 1}`,
-  state: 'Stop',
+  state: 0,
   plan: 0,
   result: 0,
   set: 0,
@@ -33,6 +33,8 @@ window.addEventListener('load', onload);
 
 function onload(event) {
   initWebSocket();
+  initChart();
+  switchTab(1);
   }
 
 function initWebSocket() {
@@ -67,13 +69,30 @@ function onMessage(event) {
         if(myObj.cmd === 0) { //xử lí việc RUN
           if(myObj.run === 1) {
             sensor.state = 1; 
+            alert('Run ',myObj.id);
             console.log("State", sensor.state);
-            }
+            const btn = document.getElementById(`runBtn-${myObj.id}`); 
+            console.log("run btn",btn);
+            if(btn){
+              btn.innerText = "Stop";
+              btn.classList.remove("btn-success");
+              btn.classList.add("btn-danger");
+              btn.setAttribute("onclick", `click_stop(${myObj.id})`); // đổi cái hàm onclick từ click_run thành click_stop
+            } 
+          }
           if(myObj.run === 0) { 
             sensor.state = 0;
+            alert('Run ',myObj.id);
             console.log("State", sensor.state);
-            }
-        }
+            const btn = document.getElementById(`runBtn-${id}`);
+            console.log("run btn",btn);
+            if(btn){
+              btn.innerText = "Run";
+              btn.classList.remove("btn-danger");
+              btn.classList.add("btn-success");
+              btn.setAttribute("onclick", `click_run(${id})`); 
+            } 
+          }
         if(myObj.cmd === 1) //xử lí việc RESET
         {
           if(myObj.reset === 1) {
@@ -85,11 +104,13 @@ function onMessage(event) {
         {
           Object.keys(myObj).forEach(key => {
           if (key !== 'id' && sensor.hasOwnProperty(key)) {
-            sensor[key] = myObj[key];}
+            sensor[key] = myObj[key];
+            // sensor.plan = Math.floor(Math.random() * 1000);   // ví dụ chart
+            // sensor.result = Math.floor(Math.random() * 1000); // ví dụ chart
+          }
         })
         }         
-      }
-    });
+      }}});
     render();
   }
 }
@@ -102,13 +123,19 @@ function switchTab(tab) {
 }
 
 function render() {
-  const tab1 = document.getElementById('tab1');
-  const tab2 = document.getElementById('tab2');
-  tab1.innerHTML = '';
-  tab2.innerHTML = '';  
+  if (!document.getElementById('tab1').classList.contains('d-none')) {
+    renderTab1();
+  }
+  if (!document.getElementById('tab2').classList.contains('d-none') && currentUser === 'admin') {
+    renderTab2();
+  }
+}
 
+function renderTab1() {
+  const cardContainer = document.getElementById('card-container');
+  cardContainer.innerHTML = '';
   globalData.forEach(data => {
-    //console.log(
+    //console.log(  
     //   `Sensor: ${data.name}, Plan: ${data.plan}, Result: ${data.result}, Set: ${data.set}, Product: ${data.product}, Cycle: ${data.cycle}, Total: ${data.total}`
     // );
     const card = document.createElement('div');
@@ -126,12 +153,15 @@ function render() {
         <button id="resetBtn-${data.id}" class="btn btn-sm btn-danger" onclick="click_reset(${data.id})">Reset</button>
       </div>` : ''}
     `;
-    tab1.appendChild(card);
+    cardContainer.appendChild(card);
   });
-
-  if (currentUser === 'admin') {
+  
+  updateChart();
+}
+function renderTab2() {
+  const tab2 = document.getElementById('tab2');
+  tab2.innerHTML = '';
   const detailSection = globalData.map(d =>
-  {
     `<div class="card p-3 mb-3">
       <div>
         <div class="text-muted" style="font-size: 0.9em;">ID: ${d.id}</div>
@@ -143,45 +173,41 @@ function render() {
       <div class="mb-1">Total: ${d.total}</div>
       <div class="mb-1">State: ${d.state}</div>
     </div>`
-  }).join('');
+  ).join('');
   tab2.innerHTML = detailSection + renderTable();
-  } 
 }
-
 function click_run(id) {
   if (websocket && websocket.readyState === WebSocket.OPEN){
     websocket.send(JSON.stringify({"id":id,"run":1}));
-    alert('Run '+ id);
+    //alert('Run '+ id);
 
-    const btn = document.getElementById(`runBtn-${id}`); 
-    if(btn){
-      btn.innerText = "Stop";
-      btn.classList.remove("btn-success");
-      btn.classList.add("btn-danger");
-      btn.setAttribute("onclick", `click_stop(${id})`); // Gọi hàm stopbtn khi nhấn
-    } 
-  }
-   else{
-    alert('WebSocket is not connected. Please try again later.');
+  //   const btn = document.getElementById(`runBtn-${id}`); 
+  //   if(btn){
+  //     btn.innerText = "Stop";
+  //     btn.classList.remove("btn-success");
+  //     btn.classList.add("btn-danger");
+  //     btn.setAttribute("onclick", `click_stop(${id})`); // đổi cái hàm onclick từ click_run thành click_stop
+  //   } 
+  // }
+  //  else{
+  //   alert('WebSocket is not connected. Please try again later.');
   } 
 }
-
-
 
 function click_stop(id) {
   if (websocket && websocket.readyState === WebSocket.OPEN){
     websocket.send(JSON.stringify({"id":id,"run":0}));
-    alert('Stop '+ id);
-    const btn = document.getElementById(`runBtn-${id}`);
-    if(btn){
-      btn.innerText = "Run";
-      btn.classList.remove("btn-danger");
-      btn.classList.add("btn-success");
-      btn.setAttribute("onclick", `clickrun(${id})`); 
-    } 
-  }
-   else{ 
-    alert('WebSocket is not connected. Please try again later.');
+  //   alert('Stop '+ id);
+  //   const btn = document.getElementById(`runBtn-${id}`);
+  //   if(btn){
+  //     btn.innerText = "Run";
+  //     btn.classList.remove("btn-danger");
+  //     btn.classList.add("btn-success");
+  //     btn.setAttribute("onclick", `click_run(${id})`); 
+  //   } 
+  // }
+  //  else{ 
+  //   alert('WebSocket is not connected. Please try again later.');
   }  
 }
 
@@ -200,7 +226,6 @@ function click_reset(id){
   else{ 
     alert('WebSocket is not connected. Please try again later.');
   }  
-  document.innerHTML
 }
 
 function openSetting(id) {
@@ -215,18 +240,43 @@ function openSetting(id) {
 }
 
 function saveSettings() {
+  if (websocket && websocket.readyState !== WebSocket.OPEN) {
+    alert('WebSocket is not connected. Please try again later.');
+    return;
+  }
   const id = +document.getElementById('modal-id').textContent;
-  const data = globalData.find(d => d.id === id);
+  //const data = globalData.find(d => d.id === id);
   let setMax = +document.getElementById('modal-set_max').value || 0;
-  if (setMax <= 0) setMax = 9999;
-  data.set_max = setMax;
-  data.name = document.getElementById('nameInput').value;
-  ['plan', 'result', 'set', 'product', 'cycle', 'total'].forEach(key => {
-    let val = +document.getElementById(`modal-${key}`).value || 0;
-    if (val < 0) val = 0;
-    if ((key === 'plan' || key === 'result') && val>data.set_max) val = data.set_max; 
-    data[key] = val;
-  });
+    // Thu thập dữ liệu từ modal
+  const settings = {
+    id: id,
+    name: document.getElementById('nameInput').value,
+    state: +document.getElementById('modal-state').value,
+    set_max: setMax,
+    plan: +document.getElementById('modal-plan').value || 0,
+    result: +document.getElementById('modal-result').value || 0,
+    set: +document.getElementById('modal-set').value || 0,
+    product: +document.getElementById('modal-product').value || 0,
+    cycle: +document.getElementById('modal-cycle').value || 0,
+    total: +document.getElementById('modal-total').value || 0
+
+  };
+
+  // Kiểm tra và giới hạn giá trị
+  if (settings.plan < 0) settings.plan = 0;
+  if (settings.result < 0) settings.result = 0;
+  if (settings.set < 0) settings.set = 0;
+  if (settings.product < 0) settings.product = 0;
+  if (settings.cycle < 0) settings.cycle = 0;
+  if (settings.total < 0) settings.total = 0;
+  if (settings.plan > setMax) settings.plan = setMax;
+  if (settings.result > setMax) settings.result = setMax;
+
+  // Gửi tin nhắn WebSocket
+  websocket.send(JSON.stringify(settings));
+  console.log('Sent settings to server:', settings);
+
+  // Đóng modal và cập nhật giao diện (dữ liệu sẽ cập nhật khi server phản hồi)
   bootstrap.Modal.getInstance(document.getElementById('settingModal')).hide();
   render();
 }
@@ -238,9 +288,19 @@ function renderTable() {
   return `<table class="table mt-4"><thead><tr><th>Name</th><th>ID</th><th>State</th><th>Plan</th><th>Result</th><th>Cycle</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+
+const loginModalElement = document.getElementById('loginModal');
+const loginModal = new bootstrap.Modal(loginModalElement);
+
 function toggleLoginModal() {
-  new bootstrap.Modal(document.getElementById('loginModal')).show();
+  loginModal.show();
 }
+
+loginModalElement.addEventListener('shown.bs.modal', () => {
+  document.getElementById('login-password').focus();
+});
+
+
 
 function submitLogin() {
   const pw = document.getElementById('login-password').value;
@@ -273,5 +333,57 @@ function logout() {
   render();
   bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
 }
+function initChart() {
+  const ctx = document.getElementById('myChart').getContext('2d');
 
-render();
+  const labels = globalData.map(sensor => sensor.name); // tên cảm biến
+  // const dataPlan = globalData.map(sensor => sensor.plan);
+  // const dataResult = globalData.map(sensor => sensor.result);
+
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Plan',
+        data: [2,1,2,3],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        tension: 0.2
+      },
+      {
+        label: 'Result',
+        data: [4,5,6,7],
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        tension: 0.2
+      }
+    ]
+  };
+
+  const config = {
+    type: 'line',
+    data: chartData,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Plan vs Result Chart'
+        }
+      }
+    },
+  };
+  window.myChart = new Chart(ctx, config); // lưu biểu đồ vào biến toàn cục để sau update
+}
+
+
+function updateChart() {
+  if (window.myChart) {
+    window.myChart.data.datasets[0].data = globalData.map(sensor => sensor.plan);
+    window.myChart.data.datasets[1].data = globalData.map(sensor => sensor.result);
+    window.myChart.update();
+  }
+}
