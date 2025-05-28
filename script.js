@@ -13,14 +13,14 @@ const globalData = Array.from({ length: 4 }, (_, i) =>
 ({
   id: i + 1,
   name: `Sensor${i + 1}`,
-  plan: 0,
-  result: 0,
-  set: 0,
+  plan: [160,2],
+  result: [161,3],
+  set: [162,4],
   set_max: 9999,
   product: 0,
-  cycle: 0,
-  total: 0,
-  state: 0
+  cycle: [163,5],
+  total: [164,6],
+  state: [165,7]
 }
 ));
 
@@ -88,8 +88,8 @@ function renderTab1() {
       ${currentUser !== 'user' ? `
       <div class="d-flex justify-content-between">
         <button class="btn btn-sm btn-secondary" onclick="openSetting(${data.id})">Setting</button>
-        <button id="runBtn-${data.id}" class="btn btn-sm btn-${data.state === 1 ? 'danger' : 'success'}" onclick="${data.state === 1 ? `click_stop(${data.id})` : `click_run(${data.id})`}">
-          ${data.state === 1 ? 'Stop' : 'Run'}
+        <button id="runBtn-${data.id}" class="btn btn-sm btn-${data.state[1] === 1 ? 'danger' : 'success'}" onclick="${data.state[1] === 1 ? `click_stop(${data.id})` : `click_run(${data.id})`}">
+          ${data.state[1] === 1 ? 'Stop' : 'Run'}
         </button>
         <button id="resetBtn-${data.id}" class="btn btn-sm btn-danger" onclick="click_reset(${data.id})">Reset</button>
       </div>` : ''}
@@ -107,37 +107,37 @@ function renderTab2() {
         <div class="text-muted" style="font-size: 0.9em;">ID: ${d.id}</div>
         <h6 class="mb-0">${d.name}</h6>
       </div>
-      <div class="mb-1">Plan: ${d.plan}</div>
-      <div class="mb-1">Result: ${d.result}</div>
-      <div class="mb-1">Plan|Result Set: ${d.set}</div>
-      <div class="mb-1">Cycle: ${d.cycle}</div>
-      <div class="mb-1">Total: ${d.total}</div>
-      <div class="mb-1">State: ${d.state}</div>
+      <div class="mb-1">Plan: ${d.plan[1]}</div>
+      <div class="mb-1">Result: ${d.result[1]}</div>
+      <div class="mb-1">Plan|Result Set: ${d.set[1]}</div>
+      <div class="mb-1">Cycle: ${d.cycle[1]}</div>
+      <div class="mb-1">Total: ${d.total[1]}</div>
+      <div class="mb-1">State: ${d.state[1]}</div>
     </div>`
   ).join('');
   tab2.innerHTML = detailSection + renderTable();
 }
 
-
 function mapData(data) {
   let arrIndex = 0;
-  const rawDataArray = [];
-  
-  // globalData.forEach(globalObj =>{
-  //   globalData.keys.forEach(key =>
-  //     Object.values(globalData)[0] = Object.values(dataObj)[0];
-  //   );
-  // });
+  let arrIndex2 = 0;
+
+  let rawDataArray = [];
+  let rawDataArrayName = [];
+
   data.forEach(dataObj =>{
-    const dataLength = 6;
-    let firstKey = Object.keys(dataObj)[0];
-    let value = Object.values(dataObj)[0];
-    //console.log("first key: "+firstKey);
-    //console.log("first key value: "+value);
+    // let firstKey = Object.keys(dataObj)[0];
+    // let value = Object.values(dataObj)[0];
+    // console.log("first key: "+firstKey);
+    // console.log("first key value: "+value);
     rawDataArray[arrIndex] = Object.values(dataObj)[0];
+    rawDataArrayName[arrIndex2] = Object.keys(dataObj)[0];
     arrIndex ++;
+    arrIndex2 ++;
     });    
-  console.log("array value: ", rawDataArray);
+  // console.log("array value: ", rawDataArray);
+  // console.log("array value: ", rawDataArrayName);
+
 
   let idIndex = 1;
   globalData.forEach(globalDataObj=>
@@ -145,19 +145,21 @@ function mapData(data) {
     let keyIndex = 0;
     Object.keys(globalDataObj).forEach(key =>{ 
       if (key !== "id" && key !== "name" && key !== "product" && key !== "set_max"){
-        globalDataObj[key] = rawDataArray[keyIndex + (idIndex-1)*6];
+        globalDataObj[key][1] = rawDataArray[keyIndex + (idIndex-1)*6];
+        globalDataObj[key][0] = rawDataArrayName[keyIndex + (idIndex-1)*6];
         keyIndex++;}}
     );
     idIndex ++;
   });
 
-  console.log("global: ", globalData);
+  //console.log("global: ", globalData);
   }
 function onMessage(event) {
   let data = JSON.parse(event.data);
   console.log(data);
   let rawData = JSON.parse(event.data);
   let masterData = rawData.masterData;
+  // console.log("masterData :",masterData);
   mapData(masterData);
   //----------------------------------------------------------------old version
 
@@ -209,7 +211,10 @@ function switchTab(tab) {
 
 function click_run(id) {
   if (websocket && websocket.readyState === WebSocket.OPEN){
-    websocket.send(JSON.stringify({"id":id,"run":1}));
+    const dataObj = globalData.find(d => d.id === id);
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"1"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"1"}));
+    
     //runtostop(id);
   }
    else{
@@ -219,7 +224,11 @@ function click_run(id) {
 
 function click_stop(id) {
   if (websocket && websocket.readyState === WebSocket.OPEN){
-    websocket.send(JSON.stringify({"id":id,"run":0}));
+    const dataObj = globalData.find(d => d.id === id);    
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
+    
+
     //stoptorun(id);
   }
    else{ 
@@ -229,33 +238,69 @@ function click_stop(id) {
 
 
 function click_reset(id){
-  if (websocket && websocket.readyState === WebSocket.OPEN){
-    websocket.send(JSON.stringify({"id":id,"reset":1}));
-    alert('Reset '+ id);
+  const dataObj = globalData.find(d => d.id === id); 
+  console.log("plan id: ", dataObj.plan[0]);
+  console.log("result id: ", dataObj.result[0]);
+
+  if (websocket && websocket.readyState === WebSocket.OPEN){    
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.plan[0]),"value":"0"}));
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.result[0]),"value":"0"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
   }
-  // Đặt giá trị `plan` và `result` về giá trị của `set`
-  // const data = globalData.find(d => d.id === id);
-  // if (data) {
-  //   data.plan = 0;
-  //   data.result = 0;
-  //   render(); // Cập nhật lại giao diện sau khi thay đổi
-  // }
-  // else{ 
-  //   alert('WebSocket is not connected. Please try again later.');
-  // }  
 }
 
 function openSetting(id) {
   if (currentUser === 'user') return;
   const data = globalData.find(d => d.id === id);
+  const script = `
+    <p>ID: <span id="modal-id"></span></p>
+    <label for="nameInput">Change name:</label>
+    <input id="nameInput" class="form-control mb-3">
+
+    <div class="form-group">
+      <label>Plan</label>
+      <input class="form-control" id="modal-plan-${id}" value='${data.plan[1]}' onchange="setValue(${id}, 'plan')">
+
+      <label>Result</label>
+      <input class="form-control" id="modal-result-${id}" value='${data.result[1]}' onchange="setValue(${id}, 'result')">
+
+      <label>Set Max</label>
+      <input class="form-control" id="modal-set_max-${id}" value='${data.set_max}' onchange="setValue(${id}, 'set_max')">
+
+      <label>Plan/Result Set</label>
+      <input class="form-control" id="modal-set-${id}" value='${data.set[1]}' onchange="setValue(${id}, 'set')">
+
+      <label>Product</label>
+      <input class="form-control" id="modal-product-${id}" value='${data.product}' onchange="setValue(${id}, 'product')">
+
+      <label>Cycle Time</label>
+      <input class="form-control" id="modal-cycle-${id}" value='${data.cycle[1]}' onchange="setValue(${id}, 'cycle')">
+
+      <label>Total Plan</label>
+      <input class="form-control" id="modal-total-${id}" value='${data.total[1]}' onchange="setValue(${id}, 'total')">
+    </div>
+  `;
+  document.getElementById('modal-body').innerHTML = script;
+
   document.getElementById('modal-id').textContent = id;
   document.getElementById('nameInput').value = data.name;
-  ['plan', 'result', 'set', 'product', 'cycle', 'total','set_max'].forEach(key => {
-    document.getElementById(`modal-${key}`).value = data[key];
-  });
+  // ['plan', 'result', 'set', 'product', 'cycle', 'total','set_max'].forEach(key => {
+  //   document.getElementById(`modal-${key}`).value = data[key];
+  // });
+  // document.getElementById.addEventListener('on');
   new bootstrap.Modal(document.getElementById('settingModal')).show();
 }
 
+
+function setValue(dataId,school){
+  // const input = document.getElementById(`modal-${key}-${dataId}`);
+  const value = document.getElementById(`modal-${school}-${dataId}`).value;
+  const data = globalData.find(d => d.id === dataId);
+  const address = parseInt(data[school][0]);
+  // const address = document.getElementById(`modal-${school}-${dataId}`).value[0];
+  console.log("data sent",JSON.stringify({"cmnd":"setModbusValue","id":dataId,"type":"word","address":address,"value":value}))
+  websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":dataId,"type":"word","address":address,"value":value}));
+}
 function saveSettings() {
   if (websocket && websocket.readyState !== WebSocket.OPEN) {
     alert('WebSocket is not connected. Please try again later.');
@@ -276,7 +321,6 @@ function saveSettings() {
     product: +document.getElementById('modal-product').value || 0,
     cycle: +document.getElementById('modal-cycle').value || 0,
     total: +document.getElementById('modal-total').value || 0
-
   };
 
   // Kiểm tra và giới hạn giá trị
@@ -303,12 +347,12 @@ function renderTable() {
     `<tr>
       <td>${d.name}</td>
       <td>${d.id}</td>
-      <td>${d.state}</td>
-      <td>${d.plan}</td>
-      <td>${d.result}</td>
-      <td>${d.cycle}</td>
-      <td>${d.total}</td>
-      <td>${d.set}
+      <td>${d.state[1]}</td>
+      <td>${d.plan[1]}</td>
+      <td>${d.result[1]}</td>
+      <td>${d.cycle[1]}</td>
+      <td>${d.total[1]}</td>
+      <td>${d.set[1]}
       </td>
     </tr>`
   ).join('');
@@ -412,8 +456,8 @@ function initChart() {
 
 function updateChart() {
   if (window.myChart) {
-    window.myChart.data.datasets[0].data = globalData.map(sensor => sensor.plan);
-    window.myChart.data.datasets[1].data = globalData.map(sensor => sensor.result);
+    window.myChart.data.datasets[0].data = globalData.map(sensor => sensor.plan[1]);
+    window.myChart.data.datasets[1].data = globalData.map(sensor => sensor.result[1]);
     window.myChart.update();
   }
 }
