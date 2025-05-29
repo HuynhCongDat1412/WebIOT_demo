@@ -3,32 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>Sensor Dashboard</title>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container mt-4">
+
+<div class="container mt-4">
     <div class="d-flex justify-content-between mb-3">
       <div>
+        <!-- Navigation buttons -->
         <button class="btn btn-primary me-2" onclick="switchTab(1)">Dashboard</button>
-        <button class="btn btn-primary" onclick="switchTab(2)">Adminstrator</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Administrator</button>
       </div>
-      <div>
-        <button class="btn btn-secondary" onclick="toggleLoginModal()">Login</button>
-      </div>
-    </div>
-    <div id="tab1" class="tab-content">
-      <div id="card-container" class="d-flex flex-wrap gap-3"></div>
-      <div class="mt-4 w-100">
-        <canvas id="myChart" height="150"></canvas>
+      <div class="d-flex" id="header-login">
+        <!-- Display current user and login icon -->
+        <div class="fw-bold text-primary p-2 text-dark" id="loginAccount" style="font-size: large;">User</div>
+        <button class="loginIcon">
+          <i class="bi bi-person-circle" style="font-size: 1.5rem;" onclick="toggleLoginModal()"></i>
+        </button>
       </div>
     </div>
-    
+</div>
+<CENTER>
+    <div id="tab1">
+      <!-- Sensor cards container -->
+      <div id="card-container" class="d-flex flex-wrap gap-3">
+      </div>
+      <!-- Chart container -->
+      <div class="mt-4 w-100 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+        <canvas id="myChart" height="150" style="width: 100%;"></canvas>
+      </div>
+    </div>
+
     <div id="tab2" class="tab-content d-none"></div>
 
-  </div>
+</CENTER>
+  
 
-  <!-- Modal Setting -->
+  
+  <!-- Modal for Settings -->
   <div class="modal fade" id="settingModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -36,9 +53,10 @@
           <h5 class="modal-title">Edit Parameter</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body"  id = "modal-body">
-          <!-- <p>ID: <span id="modal-id"></span></p> -->
-          <!-- <p>ID: <span id="modal-id"></span></p>
+        <div class="modal-body"  id="modal-body">
+          <!-- Input fields for parameters, currently commented out -->
+          <!-- 
+          <p>ID: <span id="modal-id"></span></p>
           <label for="nameInput">Change name:</label>
           <input id="nameInput" class="form-control mb-3">
 
@@ -57,7 +75,8 @@
             <input class="form-control" id="modal-cycle">
             <label>Total Plan</label>
             <input class="form-control" id="modal-total">
-          </div> -->
+          </div> 
+          -->
         </div>
         <div class="modal-footer">
           <button class="btn btn-success" onclick="saveSettings()">Save</button>
@@ -66,7 +85,7 @@
     </div>
   </div>
 
-  <!-- Modal Login -->
+  <!-- Modal for Login -->
   <div class="modal fade" id="loginModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -75,9 +94,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
+          <!-- Input for password -->
           <input type="password" class="form-control" id="login-password" placeholder="Enter password">
         </div>
         <div class="modal-footer">
+          <!-- Login modal buttons -->
           <button class="btn btn-primary" onclick="submitLogin()">Submit</button>
           <button class="btn btn-warning" onclick="changePassword()">Change</button>
           <button class="btn btn-danger" onclick="logout()">Logout</button>
@@ -86,8 +107,12 @@
     </div>
   </div>
 
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Script -->
   <script src="script.js"></script>
 </body>
 </html>
+

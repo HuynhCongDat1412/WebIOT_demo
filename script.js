@@ -25,7 +25,7 @@ const globalData = Array.from({ length: 4 }, (_, i) =>
 ));
 
 //khoi tao websocket
-var gateway = `http://192.168.0.251/ws`;
+var gateway = `ws://${window.location.hostname}:8080/`;
 var websocket;
 
 // Init web socket when the page loads
@@ -35,6 +35,8 @@ function onload(event) {
   initWebSocket();
   initChart();
   switchTab(1);
+    render();
+
   }
 
 function initWebSocket() {
@@ -49,7 +51,6 @@ function onOpen(event) {
   console.log('Connection opened');
   getReadings();
   setInterval(() => {
-    render();
   }, 500);
 }
 
@@ -70,6 +71,7 @@ function render() {
     renderTab2();
   }
 }
+
 function renderTab1() {
   const cardContainer = document.getElementById('card-container');
   cardContainer.innerHTML = '';
@@ -77,27 +79,11 @@ function renderTab1() {
     //console.log(  
     //   `Sensor: ${data.name}, Plan: ${data.plan}, Result: ${data.result}, Set: ${data.set}, Product: ${data.product}, Cycle: ${data.cycle}, Total: ${data.total}`
     // );
-    const card = document.createElement('div');
-    card.className = 'card p-3';
-    const stateText = data.state === 1 ? 'RUN' : 'STOP';
-    card.innerHTML = `
-      <h5>${data.name}</h5>
-      <p>ID: ${data.id}</p>
-      <p>State: ${stateText}</p>
-      <p>Plan: ${data.plan} | Result: ${data.result}</p>
-      ${currentUser !== 'user' ? `
-      <div class="d-flex justify-content-between">
-        <button class="btn btn-sm btn-secondary" onclick="openSetting(${data.id})">Setting</button>
-        <button id="runBtn-${data.id}" class="btn btn-sm btn-${data.state[1] === 1 ? 'danger' : 'success'}" onclick="${data.state[1] === 1 ? `click_stop(${data.id})` : `click_run(${data.id})`}">
-          ${data.state[1] === 1 ? 'Stop' : 'Run'}
-        </button>
-        <button id="resetBtn-${data.id}" class="btn btn-sm btn-danger" onclick="click_reset(${data.id})">Reset</button>
-      </div>` : ''}
-    `;    
+    const card = cardGen(data);
     cardContainer.appendChild(card);
-  });  
-  updateChart();
-}
+  }); 
+      updateChart();}
+
 function renderTab2() {
   const tab2 = document.getElementById('tab2');
   tab2.innerHTML = '';
@@ -116,6 +102,69 @@ function renderTab2() {
     </div>`
   ).join('');
   tab2.innerHTML = detailSection + renderTable();
+}
+
+function cardGen(data){
+  const card = document.createElement('div');
+  const stateText = data.state === 1 ? 'RUN' : 'STOP';
+  card.innerHTML = `
+  <div class=" card2 col-sm-12 col-md-6 col-lg-4" style="width:100%">
+    <div class="card-header2 row bg-warning">
+      <div class="col">
+        <div class="row">
+          <div class="col" style="position: relative; left: 20px;">
+            <p>ID: ${data.id}/0</p>
+          </div>
+          <div class="col" style="position: relative; left: 20px;">
+            <p>State: ${stateText}</p>  
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: center">
+            <h4 id="sensor_name">${data.name}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body01 ">
+      <div class="card-body01 row">
+        <div class="col text-muted">
+          <!-- Plan display -->
+          Plan: 
+        </div>
+        <div class="col">
+          <h3 id="regs0_1">${data.plan[1]}</h3>
+        </div>
+      </div>
+      <div class="card-body01 row">
+        <div class="col text-muted">
+          <!-- Result display -->
+          Result: 
+        </div>
+        <div class="col">
+          <h3 id="regs1_1">${data.result[1]}</h3>
+        </div>
+      </div>
+    </div>
+      <div class="row d-flex justify-content-between">
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Setting button -->
+          <button class="btn btn-warning btn-secondary" onclick="openSetting(${data.id})">Setting</button>
+        </div>
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Run button -->
+          <button type="button" id="runBtn-${data.id}" class="btn btn-warning btn-${data.state[1] === 1 ? 'danger' : 'success'}" onclick="${data.state[1] === 1 ? `click_stop(${data.id})` : `click_run(${data.id})`}">Run</button>
+        </div>
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Reset button -->
+          <button id="resetBtn-${data.id}" class="btn btn-warning" onclick="click_reset(${data.id})">Reset</button>
+        </div>
+      </div>
+
+  </div>
+    `;
+  return card;
 }
 
 function mapData(data) {
@@ -379,15 +428,14 @@ document.getElementById('login-password').addEventListener('keypress',function(e
 function submitLogin() {
   const pw = document.getElementById('login-password').value;
   if (pw === passwords.staff) {
-    currentUser = 'staff';
-    alert('Đăng nhập staff thành công!');
+    currentUser = 'staff';    
   } else if (pw === passwords.admin) {
-    currentUser = 'admin';
-    alert('Đăng nhập admin thành công!');
+      currentUser = 'admin';
   } else {
     alert('Sai mật khẩu!');
     return;
   }
+  document.getElementById(`loginAccount`).innerText = `${currentUser === 'admin' ? 'Admin' : 'Staff'}`;
   render();
   bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
 }

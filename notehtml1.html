@@ -1,0 +1,227 @@
+<!-- This is the main dashboard page. It displays four cards each representing a machine. Each card displays the machine's ID, state, plan, result, and buttons for setting, running, and resetting the machine. -->
+<div class="row p-4" id="dashAppItem">
+  <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+    <div class="card2">
+      <div class="card-header2 row bg-warning ">
+        <div class="col" style="position: relative; left: 20px;">
+          <!-- Machine ID display -->
+          ID:0/0
+        </div>
+        <div class="col" id="State0_1" style="position: relative; right: 20px; text-align: right">
+          <!-- Machine state display -->
+          state:Stop
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: center">
+            <!-- Machine name display -->
+            <h3 id="machineValue0">Machine 1 </h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body2">
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">
+            <!-- Plan display -->
+            Plan:
+          </div>
+          <div class="col">
+            <h3 id="regs0_1">0</h3>
+          </div>
+        </div>
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">
+            <!-- Result display -->
+            Result:
+          </div>
+          <div class="col">
+            <h3 id="regs1_1">0</h3>
+          </div>
+        </div>
+        <div class="button row">
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Setting button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" data-bs-toggle="modal" onclick="CardSetup_dlg('Edit Parameter',1)">
+              Setting
+            </button>
+          </div>
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Run button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" id="RunButton1" onclick="changeState(1)">
+              Run
+            </button>
+          </div>
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Reset button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" id="resetButton1" onclick="changeReset(1)">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+    <div class="card2">
+      <div class="card-header2 row bg-warning ">
+        <div class="col" style="position: relative; left: 20px;">
+          <!-- Machine ID display -->
+          ID:0/0
+        </div>
+        <div class="col" id="State0_2" style="position: relative; right: 20px;text-align: right">
+            state:Stop
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: center">
+            <!-- Machine name display -->
+            <h3 id="machineValue0">Machine 2 </h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body2">
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">
+            <!-- Plan display -->
+            Plan:
+          </div>
+          <div class="col">
+            <h3 id="regs0_2">0</h3>
+          </div>
+        </div>
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">
+            <!-- Result display -->
+            Result:
+          </div>
+          <div class="col">
+            <h3 id="regs1_2">0</h3>
+          </div>
+        </div>
+        <div class="button row">
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Setting button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" data-bs-toggle="modal" onclick="CardSetup_dlg('Edit Parameter',2)">
+              Setting
+            </button>
+          </div>
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Run button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" id="RunButton2" onclick="changeState(2)">
+              Run
+            </button>
+          </div>
+          <div class="col-4 align-self-center align-items-center">
+            <!-- Reset button -->
+            <button style="width: 100%;" type="button" class="btn btn-warning" id="resetButton2" onclick="changeReset(2)">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+    <div class="card2">
+      <div class="card-header2 row bg-warning ">
+        <div class="col" style="position: relative; left: 20px;">
+          <!-- Machine ID display -->
+          ID:0/0
+        </div>
+        <div class="col" id="State0_2" style="position: relative; right: 20px;
+
+
+
+
+
+
+/* --------------------------------------------------NOTE 2 */
+  /* <!-- Machine Card --> */
+  
+  <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+    <div class="card3">
+      <!-- Card header with machine ID and state -->
+      <div class="card-header2 row bg-warning">
+        <div class="col" style="position: relative; left: 20px;">
+          <!-- Machine ID display -->
+          <div>ID:0/0</div>
+        </div>
+        <div class="col" id="State0_2" style="position: relative; right: 20px; text-align: right">
+          <!-- Machine state display -->
+          <div>state:Stop</div>
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: center">
+            <!-- Machine name display -->
+            <h3 id="machineValue0">Machine 3</h3>
+          </div>
+        </div>
+      </div>
+      <!-- Card Body with Parameters -->
+      <div class="card-body2">
+        <!-- Plan display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Plan:</div>
+          <div class="col">
+            <h3 id="regs0_2">0</h3>
+          </div>
+        </div>
+        <!-- Result display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Result:</div>
+          <div class="col">
+            <h3 id="regs1_2">0</h3>
+          </div>
+        </div>
+        <!-- Plan set display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Plan set:</div>
+          <div class="col">
+            <h3 id="regs2_2">0</h3>
+          </div>
+        </div>
+        <!-- Result set display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Result set:</div>
+          <div class="col">
+            <h3 id="regs3_2">0</h3>
+          </div>
+        </div>
+        <!-- Cycle Time display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Cycle Time:</div>
+          <div class="col">
+            <h3 id="regs4_2">0</h3>
+          </div>
+        </div>
+        <!-- Total Plan display -->
+        <div class="card-body-row card-body01 row">
+          <div class="col text-muted">Total Plan:</div>
+          <div class="col">
+            <h3 id="regs5_2">0</h3>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+<!-- ------------------------------------------------chart----------------------------------------------- -->
+ Chart
+
+
+<!-- A button to return to the home page -->
+<div class="col12 p-3 card" style="width: 95vw;">
+  <button class="btn btn-warning " id="button_home" style="display: block; margin: auto; width: 100px;  font-size: 1rem; border-radius: 10px;">
+    Home
+  </button> 
+  <!-- A container for the chart -->
+  <div>
+    <!-- An invisible iframe to capture events -->
+    <iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; inset: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
+    <!-- A container for the chart buttons -->
+    <div class="d-flex bm-3" id="dashButtonItem" style="padding: 10px;    height: 60px; width: 55%;"></div>
+    <!-- The chart itself -->
+    <canvas class=" text-primary" style="max-width: 100%; display: block; width: 683px; height: 341px;" id="lineChart" height="341" width="683"></canvas>
+  </div>
+</div>

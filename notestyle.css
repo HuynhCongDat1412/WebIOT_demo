@@ -1,0 +1,43 @@
+css\
+.card2 {
+            border-radius: 25px;
+            width: auto;
+            height: 14rem;
+            /* margin: 200px auto; */
+            color: #ffff;
+            overflow: hidden;
+            background-image: linear-gradient(130deg, #535c5e, #2e3138);
+            box-shadow: 2px 2px 12px 1px rgba(15, 15, 15, 255);
+        }
+    
+.card3 {
+    border-radius: 25px;
+    width: auto;
+    height: auto;
+    /* margin: 200px auto; */
+    color: #ffff;
+    overflow: hidden;
+    background-image: linear-gradient(130deg, #535c5e, #2e3138);
+    box-shadow: 2px 2px 12px 1px rgba(15, 15, 15, 255);
+}
+.card-header2 {
+    border-radius: 25px 25px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: black;
+    height: 70px;
+}
+/* .card-body2 {
+    margin: 10px auto;
+    font-size: 1.5rem;
+} */
+
+.card-body01 {
+    margin: 10px auto;
+    font-size: 1.5rem;
+}
+.card-body-row {
+    margin: center center;
+}
