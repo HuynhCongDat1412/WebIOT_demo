@@ -1,4 +1,292 @@
-let currentUser = 'admin'; // 'user', 'staff', 'admin'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sensor Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom Stylesheet -->
+   <style>
+    body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.my-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px 24px 0 24px;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.mt-4 { margin-top: 1.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 2.5rem; }
+.me-2 { margin-right: 0.5rem; }
+.w-100 { width: 100%; }
+
+/* Button styles */
+.my-btn {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+}
+.my-btn:last-child { margin-right: 0; }
+.my-btn:hover { background: #0b5ed7; }
+.my-btn.success { background: #198754; }
+.my-btn.success:hover { background: #157347; }
+.my-btn.primary { background: #0d6efd; }
+.my-btn.primary:hover { background: #0b5ed7; }
+.my-btn.warning { background: #ffc107; color: #212529; }
+.my-btn.warning:hover { background: #e0a800; }
+.my-btn.danger { background: #dc3545; }
+.my-btn.danger:hover { background: #bb2d3b; }
+
+/* Card grid */
+.row-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2.5rem; /* giống mt-3 cho chart cách card */
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 20px;
+  min-width: 260px;
+  max-width: 320px;
+  flex: 1 1 300px;
+  margin-bottom: 0;
+}
+
+/* Chart container */
+.chart-container {
+  max-width: 900px;
+  margin: 2.5rem auto 0 auto; /* cách top một ít, canh giữa */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px 20px 20px 20px;
+}
+
+/* Modal styles */
+.modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-dialog {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+  padding: 0;
+}
+.modal-content {
+  position: relative;
+  padding: 0 20px 20px 20px;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 10px 0;
+}
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+.modal-body {
+  padding: 10px 0;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+}
+.d-none { display: none !important; }
+
+/* Login icon */
+.loginIcon {
+  background: none;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  padding: 0;
+}
+.icon-person {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: url('data:image/svg+xml;utf8,<svg fill="%230d6efd" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37c.69-1.19 2.065-2.37 5.468-2.37 3.403 0 4.778 1.18 5.468 2.37A7 7 0 0 0 8 1z"/></svg>') no-repeat center center/contain;
+}
+
+/* Form control */
+.form-control {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+/* Misc */
+.fw-bold { font-weight: bold; }
+.text-primary { color: #0d6efd !important; }
+.text-dark { color: #212529 !important; }
+.p-2 { padding: 0.5rem; }
+   </style>
+</head>
+<body>
+
+<div class="container mt-4" >
+    <div class="d-flex justify-content-between mb-3">
+      <div>
+        <!-- Navigation buttons -->
+        <button class="btn btn-primary me-2" onclick="switchTab(1)">Dashboard</button>
+        <button class="btn btn-primary" onclick="switchTab(2)">Administrator</button>
+      </div>
+      <div class="d-flex" id="header-login">
+        <!-- Display current user and login icon -->
+        <div class="fw-bold text-primary p-2 text-dark" id="loginAccount" style="font-size: large;">User</div>
+        <button class="loginIcon">
+          <i class="bi bi-person-circle" style="font-size: 1.5rem;" onclick="toggleLoginModal()"></i>
+        </button>
+      </div>
+    </div>
+</div>
+<CENTER>
+    <div id="tab1">
+      <!-- Sensor cards container -->
+      <div id="card-container" class="row g-3">
+        <!-- Card sẽ được render bằng JS, mỗi card là col-md-4 mb-4 -->
+      </div>
+      <!-- Chart container -->
+      <div class="mt-4 w-100 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+        <canvas id="myChart" height="150" style="width: 100%;"></canvas>
+      </div>
+    </div>
+
+    <div id="tab2" class="tab-content d-none"></div>
+
+</CENTER>
+  
+
+  
+  <!-- Modal for Settings -->
+  <div class="modal fade" id="settingModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Parameter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body"  id="modal-body">
+          <!-- Input fields for parameters, currently commented out -->
+          <!-- 
+          <p>ID: <span id="modal-id"></span></p>
+          <label for="nameInput">Change name:</label>
+          <input id="nameInput" class="form-control mb-3">
+
+          <div class="form-group">
+            <label>Plan</label>
+            <input class="form-control" id="modal-plan">
+            <label>Result</label>
+            <input class="form-control" id="modal-result">
+            <label>Set Max</label>
+            <input class="form-control" id="modal-set_max">
+            <label>Plan/Result Set</label>
+            <input class="form-control" id="modal-set">
+            <label>Product</label>
+            <input class="form-control" id="modal-product">
+            <label>Cycle Time</label>
+            <input class="form-control" id="modal-cycle">
+            <label>Total Plan</label>
+            <input class="form-control" id="modal-total">
+          </div> 
+          -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" onclick="saveSettings()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Login -->
+  <div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Input for password -->
+          <input type="password" class="form-control" id="login-password" placeholder="Enter password">
+        </div>
+        <div class="modal-footer">
+          <!-- Login modal buttons -->
+          <button class="btn btn-primary" onclick="submitLogin()">Submit</button>
+          <button class="btn btn-warning" onclick="changePassword()">Change</button>
+          <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Script -->
+  <script>
+    let currentUser = 'admin'; // 'user', 'staff', 'admin'
 let passwords = { staff: '1234', admin: 'admin' };
 const savedPw = localStorage.getItem('passwords');
 let flag = 1;
@@ -518,4 +806,11 @@ function updateChart() {
 function closeLoginModal() {
   document.getElementById('loginModal').classList.add('d-none');
 }
+
+
+  </script>
+
+</body>
+
+</html>
 

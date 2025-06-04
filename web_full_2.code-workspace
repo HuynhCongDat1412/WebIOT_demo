@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../web_full_2"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "learn_web"
+	}
+}

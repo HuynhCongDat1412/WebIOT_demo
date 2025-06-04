@@ -2,96 +2,235 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sensor Dashboard</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <title>Dashboard</title>
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <style>
+/* --- style.css --- */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.my-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px 24px 0 24px;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.mt-4 { margin-top: 1.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 2.5rem; }
+.me-2 { margin-right: 0.5rem; }
+.w-100 { width: 100%; }
+
+.my-btn {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 0.5rem;
+}
+.my-btn:last-child { margin-right: 0; }
+.my-btn:hover { background: #0b5ed7; }
+.my-btn.success { background: #198754; }
+.my-btn.success:hover { background: #157347; }
+.my-btn.primary { background: #0d6efd; }
+.my-btn.primary:hover { background: #0b5ed7; }
+.my-btn.warning { background: #ffc107; color: #212529; }
+.my-btn.warning:hover { background: #e0a800; }
+.my-btn.danger { background: #dc3545; }
+.my-btn.danger:hover { background: #bb2d3b; }
+
+.row-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center; /* canh giữa các card */
+  margin-bottom: 2.5rem; /* giống mt-3 cho chart cách card */
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 20px;
+  min-width: 260px;
+  max-width: 320px;
+  flex: 1 1 300px;
+  margin-bottom: 0;
+}
+
+.chart-container {
+  max-width: 900px;
+  margin: 2.5rem auto 0 auto; /* cách top một ít, canh giữa */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px 20px 20px 20px;
+}
+
+.modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-dialog {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  min-width: 320px;
+  max-width: 400px;
+  width: 100%;
+  padding: 0;
+}
+.modal-content {
+  position: relative;
+  padding: 0 20px 20px 20px;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 10px 0;
+}
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+.modal-body {
+  padding: 10px 0;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+}
+.d-none { display: none !important; }
+
+.loginIcon {
+  background: none;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  padding: 0;
+}
+.icon-person {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: url('data:image/svg+xml;utf8,<svg fill="%230d6efd" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37c.69-1.19 2.065-2.37 5.468-2.37 3.403 0 4.778 1.18 5.468 2.37A7 7 0 0 0 8 1z"/></svg>') no-repeat center center/contain;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.fw-bold { font-weight: bold; }
+.text-primary { color: #0d6efd !important; }
+.text-dark { color: #212529 !important; }
+.p-2 { padding: 0.5rem; }
+  </style>
 </head>
 <body>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
+<div class="my-container mt-4">
+    <div class="flex-between mb-3">
       <div>
         <!-- Navigation buttons -->
-        <button class="btn btn-primary me-2" onclick="switchTab(1)">Dashboard</button>
-        <button class="btn btn-primary" onclick="switchTab(2)">Administrator</button>
+        <button class="my-btn me-2" onclick="switchTab(1)">Dashboard</button>
+        <button class="my-btn" onclick="switchTab(2)">Administrator</button>
       </div>
-      <div class="d-flex" id="header-login">
+      <div class="flex-row" id="header-login">
         <!-- Display current user and login icon -->
         <div class="fw-bold text-primary p-2 text-dark" id="loginAccount" style="font-size: large;">User</div>
         <button class="loginIcon">
-          <i class="bi bi-person-circle" style="font-size: 1.5rem;" onclick="toggleLoginModal()"></i>
+          <span class="icon-person" onclick="toggleLoginModal()"></span>
         </button>
       </div>
     </div>
 </div>
-<CENTER>
+<center>
     <div id="tab1">
       <!-- Sensor cards container -->
-      <div id="card-container" class="d-flex flex-wrap gap-3">
+      <div id="card-container" class="row-cards g-3">
+        <!-- Card sẽ được render bằng JS, mỗi card là col-md-4 mb-4 -->
       </div>
       <!-- Chart container -->
-      <div class="mt-4 w-100 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+      <div class="mt-4 w-100 mb-5 chart-container">
         <canvas id="myChart" height="150" style="width: 100%;"></canvas>
       </div>
     </div>
 
     <div id="tab2" class="tab-content d-none"></div>
 
-</CENTER>
-  
+</center>
 
-  
   <!-- Modal for Settings -->
-  <div class="modal fade" id="settingModal" tabindex="-1">
+  <div class="modal-bg d-none" id="settingModal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Edit Parameter</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" onclick="closeSettingModal()" aria-label="Close">×</button>
         </div>
         <div class="modal-body"  id="modal-body">
           <!-- Input fields for parameters, currently commented out -->
-          <!-- 
-          <p>ID: <span id="modal-id"></span></p>
-          <label for="nameInput">Change name:</label>
-          <input id="nameInput" class="form-control mb-3">
-
-          <div class="form-group">
-            <label>Plan</label>
-            <input class="form-control" id="modal-plan">
-            <label>Result</label>
-            <input class="form-control" id="modal-result">
-            <label>Set Max</label>
-            <input class="form-control" id="modal-set_max">
-            <label>Plan/Result Set</label>
-            <input class="form-control" id="modal-set">
-            <label>Product</label>
-            <input class="form-control" id="modal-product">
-            <label>Cycle Time</label>
-            <input class="form-control" id="modal-cycle">
-            <label>Total Plan</label>
-            <input class="form-control" id="modal-total">
-          </div> 
-          -->
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" onclick="saveSettings()">Save</button>
+          <button class="my-btn success" onclick="saveSettings()">Save</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Modal for Login -->
-  <div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-bg d-none" id="loginModal">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Login</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" onclick="closeLoginModal()" aria-label="Close">×</button>
         </div>
         <div class="modal-body">
           <!-- Input for password -->
@@ -99,20 +238,560 @@
         </div>
         <div class="modal-footer">
           <!-- Login modal buttons -->
-          <button class="btn btn-primary" onclick="submitLogin()">Submit</button>
-          <button class="btn btn-warning" onclick="changePassword()">Change</button>
-          <button class="btn btn-danger" onclick="logout()">Logout</button>
+          <button class="my-btn primary" onclick="submitLogin()">Submit</button>
+          <button class="my-btn warning" onclick="changePassword()">Change</button>
+          <button class="my-btn danger" onclick="logout()">Logout</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Chart.js Library -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Custom Script -->
-  <script src="script.js"></script>
+  <script>
+// --- script.js ---
+let currentUser = 'admin'; // 'user', 'staff', 'admin'
+let passwords = { staff: '1234', admin: 'admin' };
+const savedPw = localStorage.getItem('passwords');
+let flag = 1;
+if (savedPw) {
+  passwords = JSON.parse(savedPw);
+} else {
+  // Nếu chưa có mật khẩu trong localStorage, lưu mặc định vào
+  localStorage.setItem('passwords', JSON.stringify(passwords));
+}
+
+const globalData = Array.from({ length: 4 }, (_, i) => 
+({
+  id: i + 1,
+  name: `Sensor${i + 1}`,
+  plan: [160,2],
+  result: [161,3],
+  set: [162,4],
+  set_max: 9999,
+  product: 0,
+  cycle: [163,5],
+  total: [164,6],
+  state: [165,7]
+}
+));
+
+//khoi tao websocket
+var gateway = "ws://192.168.1.2/ws";
+var websocket;
+
+// Init web socket when the page loads
+window.addEventListener('load', onload);
+
+function onload(event) {
+  initWebSocket();
+  initChart();
+  switchTab(1);
+  render();
+
+  }
+
+function initWebSocket() {
+  console.log('Trying to open a WebSocket connection…');
+  websocket = new WebSocket(gateway);
+  websocket.onopen = onOpen;
+  websocket.onclose = onClose;
+  websocket.onmessage = onMessage;
+}
+
+function onOpen(event) {
+  console.log('Connection opened');
+  getReadings();
+  setInterval(() => {
+  }, 500);
+}
+
+function getReadings(){
+  websocket.send("getReadings");
+}
+
+function onClose(event) {
+    console.log('Connection closed');
+    setTimeout(initWebSocket, 2000);
+}
+
+function render() {
+  if (!document.getElementById('tab1').classList.contains('d-none')) {
+    renderTab1();
+  }
+  if (!document.getElementById('tab2').classList.contains('d-none') && currentUser === 'admin') {
+    renderTab2();
+  }
+}
+
+function renderTab1() {
+  const cardContainer = document.getElementById('card-container');
+  cardContainer.innerHTML = '';
+  globalData.forEach(data => {
+    const card = document.createElement('div');
+    card.className = 'col-md-4 mb-4';
+    card.innerHTML = `
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">${data.name}</h5>
+          <p class="mb-1">ID: ${data.id}</p>
+          <p class="mb-1">State: ${data.state[1]}</p>
+          <p class="mb-1">Plan: ${data.plan[1]}</p>
+          <p class="mb-3">Result: ${data.result[1]}</p>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-warning" onclick="openSetting(${data.id})">Setting</button>
+            <button class="btn btn-success" onclick="click_run(${data.id})">Run</button>
+            <button class="btn btn-danger" onclick="click_reset(${data.id})">Reset</button>
+          </div>
+        </div>
+      </div>
+    `;
+    cardContainer.appendChild(card);
+  });
+  updateChart();
+}
+
+function renderTab2() {
+  const tab2 = document.getElementById('tab2');
+  tab2.innerHTML = '';
+  const row = document.createElement('div');
+  row.className = 'row g-3';
+  globalData.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'col-md-4 mb-4';
+    card.innerHTML = `
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">${d.name}</h5>
+          <p class="mb-1">ID: ${d.id}</p>
+          <p class="mb-1">State: ${d.state[1]}</p>
+          <p class="mb-1">Plan: ${d.plan[1]}</p>
+          <p class="mb-1">Result: ${d.result[1]}</p>
+          <p class="mb-1">Set: ${d.set[1]}</p>
+          <p class="mb-1">Product: ${d.product}</p>
+          <p class="mb-1">Cycle: ${d.cycle[1]}</p>
+          <p class="mb-3">Total: ${d.total[1]}</p>
+        </div>
+      </div>
+    `;
+    row.appendChild(card);
+  });
+  tab2.appendChild(row);
+  tab2.innerHTML += renderTable();
+}
+
+function cardGen(data){
+  const card = document.createElement('div');
+  const stateText = data.state === 1 ? 'RUN' : 'STOP';
+  card.innerHTML = `
+  <div class=" card2 col-sm-12 col-md-6 col-lg-4">
+  /
+    <div class="card-header2 row bg-warning">
+      <div class="col">
+        <div class="row">
+          <div class="col" style="position: relative; left: 20px;">
+            <p>ID: ${data.id}/0</p>
+          </div>
+          <div class="col" style="position: relative; left: 20px;">
+            <p>State: ${stateText}</p>  
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="text-align: center">
+            <h4 id="sensor_name">${data.name}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body01 ">
+      <div class="card-body01 row">
+        <div class="col text-muted">
+          <!-- Plan display -->
+          Plan: 
+        </div>
+        <div class="col">
+          <h3 id="regs0_1">${data.plan[1]}</h3>
+        </div>
+      </div>
+      <div class="card-body01 row">
+        <div class="col text-muted">
+          <!-- Result display -->
+          Result: 
+        </div>
+        <div class="col">
+          <h3 id="regs1_1">${data.result[1]}</h3>
+        </div>
+      </div>
+    </div>
+      <div class="row d-flex justify-content-between">
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Setting button -->
+          <button class="btn btn-warning btn-secondary" onclick="openSetting(${data.id})">Setting</button>
+        </div>
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Run button -->
+          <button type="button" id="runBtn-${data.id}" class="btn btn-warning btn-${data.state[1] === 1 ? 'danger' : 'success'}" onclick="${data.state[1] === 1 ? `click_stop(${data.id})` : `click_run(${data.id})`}">Run</button>
+        </div>
+        <div class="col-4 align-self-center align-items-center">
+          <!-- Reset button -->
+          <button id="resetBtn-${data.id}" class="btn btn-warning" onclick="click_reset(${data.id})">Reset</button>
+        </div>
+      </div>
+
+  </div>
+    `;
+  return card;
+}
+
+function mapData(data) {
+  let arrIndex = 0;
+  let arrIndex2 = 0;
+
+  let rawDataArray = [];
+  let rawDataArrayName = [];
+
+  data.forEach(dataObj =>{
+    rawDataArray[arrIndex] = Object.values(dataObj)[0];
+    rawDataArrayName[arrIndex2] = Object.keys(dataObj)[0];
+    arrIndex ++;
+    arrIndex2 ++;
+    });    
+  let idIndex = 1;
+  globalData.forEach(globalDataObj=>
+  { 
+    let keyIndex = 0;
+    Object.keys(globalDataObj).forEach(key =>{ 
+      if (key !== "id" && key !== "name" && key !== "product" && key !== "set_max"){
+        globalDataObj[key][1] = rawDataArray[keyIndex + (idIndex-1)*6];
+        globalDataObj[key][0] = rawDataArrayName[keyIndex + (idIndex-1)*6];
+        keyIndex++;}}
+    );
+    idIndex ++;
+  });
+}
+function onMessage(event) {
+  let data = JSON.parse(event.data);
+  if (data.masterData) {
+    mapData(data.masterData);
+    render();
+    return;
+  }
+  if (data.hasOwnProperty('address') && data.hasOwnProperty('value')) {
+    for (const sensor of globalData) {
+      for (const key of Object.keys(sensor)) {
+        if (Array.isArray(sensor[key]) && sensor[key][0] == data.address) {
+          sensor[key][1] = data.value;
+        }
+      }
+    }
+    render();
+    return;
+  }
+  if (Array.isArray(data)) {
+    data.forEach(myObj => {
+    });
+    render();
+    return;
+  }
+}
+
+function switchTab(tab) {
+  if (tab === 2 && currentUser !== 'admin') return alert("No access!");
+  document.getElementById('tab1').classList.toggle('d-none', tab !== 1);
+  document.getElementById('tab2').classList.toggle('d-none', tab !== 2);
+  render();
+}
+
+function click_run(id) {
+  if (websocket && websocket.readyState === WebSocket.OPEN){
+    const dataObj = globalData.find(d => d.id === id);
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"1"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"1"}));
+  }
+   else{
+    alert('WebSocket is not connected. Please try again later.');
+  } 
+}
+
+function click_stop(id) {
+  if (websocket && websocket.readyState === WebSocket.OPEN){
+    const dataObj = globalData.find(d => d.id === id);    
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
+  }
+   else{ 
+    alert('WebSocket is not connected. Please try again later.');
+  }  
+}
+
+
+function click_reset(id){
+  const dataObj = globalData.find(d => d.id === id); 
+  console.log("plan id: ", dataObj.plan[0]);
+  console.log("result id: ", dataObj.result[0]);
+
+  if (websocket && websocket.readyState === WebSocket.OPEN){    
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.plan[0]),"value":"0"}));
+    websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.result[0]),"value":"0"}));
+    console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
+  }
+}
+
+function openSetting(id) {
+  if (currentUser === 'user') return;
+  const data = globalData.find(d => d.id === id);
+  const script = `
+    <p>ID: <span id="modal-id"></span></p>
+    <label for="nameInput">Change name:</label>
+    <input id="nameInput" class="form-control mb-3">
+    <div class="form-group">
+      <label>Plan</label>
+      <input class="form-control" id="modal-plan-${id}" value='${data.plan[1]}' onchange="setValue(${id}, 'plan')">
+      <label>Result</label>
+      <input class="form-control" id="modal-result-${id}" value='${data.result[1]}' onchange="setValue(${id}, 'result')">
+      <label>Set Max</label>
+      <input class="form-control" id="modal-set_max-${id}" value='${data.set_max}' onchange="setValue(${id}, 'set_max')">
+      <label>Plan/Result Set</label>
+      <input class="form-control" id="modal-set-${id}" value='${data.set[1]}' onchange="setValue(${id}, 'set')">
+      <label>Product</label>
+      <input class="form-control" id="modal-product-${id}" value='${data.product}' onchange="setValue(${id}, 'product')">
+      <label>Cycle Time</label>
+      <input class="form-control" id="modal-cycle-${id}" value='${data.cycle[1]}' onchange="setValue(${id}, 'cycle')">
+      <label>Total Plan</label>
+      <input class="form-control" id="modal-total-${id}" value='${data.total[1]}' onchange="setValue(${id}, 'total')">
+    </div>
+  `;
+  document.getElementById('modal-body').innerHTML = script;
+  document.getElementById('modal-id').textContent = id;
+  document.getElementById('nameInput').value = data.name;
+  document.getElementById('settingModal').classList.remove('d-none');
+}
+
+function closeSettingModal() {
+  document.getElementById('settingModal').classList.add('d-none');
+}
+
+function setValue(dataId,school){
+  const value = document.getElementById(`modal-${school}-${dataId}`).value;
+  const data = globalData.find(d => d.id === dataId);
+  const address = parseInt(data[school][0]);
+  console.log("data sent",JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":address,"value":value}))
+  websocket.send(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":address,"value":value}));
+}
+function saveSettings() {
+  if (websocket && websocket.readyState !== WebSocket.OPEN) {
+    alert('WebSocket is not connected. Please try again later.');
+    return;
+  }
+  const id = +document.getElementById('modal-id').textContent;
+  let setMax = +document.getElementById('modal-set_max').value || 0;
+  const settings = {
+    id: id,
+    name: document.getElementById('nameInput').value,
+    state: +document.getElementById('modal-state').value,
+    set_max: setMax,
+    plan: +document.getElementById('modal-plan').value || 0,
+    result: +document.getElementById('modal-result').value || 0,
+    set: +document.getElementById('modal-set').value || 0,
+    product: +document.getElementById('modal-product').value || 0,
+    cycle: +document.getElementById('modal-cycle').value || 0,
+    total: +document.getElementById('modal-total').value || 0
+  };
+  if (settings.plan < 0) settings.plan = 0;
+  if (settings.result < 0) settings.result = 0;
+  if (settings.set < 0) settings.set = 0;
+  if (settings.product < 0) settings.product = 0;
+  if (settings.cycle < 0) settings.cycle = 0;
+  if (settings.total < 0) settings.total = 0;
+  if (settings.plan > setMax) settings.plan = setMax;
+  if (settings.result > setMax) settings.result = setMax;
+  websocket.send(JSON.stringify(settings));
+  console.log('Sent settings to server:', settings);
+  closeSettingModal();
+  render();
+}
+
+function renderTable() {
+  const rows = globalData.map(d =>
+    `<tr>
+      <td>${d.name}</td>
+      <td>${d.id}</td>
+      <td>${d.state[1]}</td>
+      <td>${d.plan[1]}</td>
+      <td>${d.result[1]}</td>
+      <td>${d.cycle[1]}</td>
+      <td>${d.total[1]}</td>
+      <td>${d.set[1]}
+      </td>
+    </tr>`
+  ).join('');
+  return `<table class="table mt-4"><thead><tr><th>Name</th><th>ID</th><th>State</th><th>Plan</th><th>Result</th><th>Cycle</th><th>Total</th><th>Set</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+const loginModalElement = document.getElementById('loginModal');
+// const loginModal = new bootstrap.Modal(loginModalElement);
+
+function toggleLoginModal() {
+  document.getElementById('loginModal').classList.remove('d-none');
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').classList.add('d-none');
+}
+
+loginModalElement.addEventListener('shown.bs.modal', () => {
+  document.getElementById('login-password').focus();});
+
+document.getElementById('login-password').addEventListener('keypress',function(event) {
+  if (event.key === 'Enter') {
+    submitLogin();
+  }
+});
+
+function submitLogin() {
+  const pw = document.getElementById('login-password').value;
+  if (pw === passwords.staff) {
+    currentUser = 'staff';    
+  } else if (pw === passwords.admin) {
+      currentUser = 'admin';
+  } else {
+    alert('Sai mật khẩu!');
+    return;
+  }
+  document.getElementById(`loginAccount`).innerText = `${currentUser === 'admin' ? 'Admin' : 'Staff'}`;
+  render();
+  closeLoginModal();
+}
+
+function changePassword() {
+  const pw = document.getElementById('login-password').value;
+  if (currentUser === 'staff' || currentUser === 'admin') {
+    passwords[currentUser] = pw;
+    localStorage.setItem('passwords', JSON.stringify(passwords));
+    console.log('Mật khẩu mới:', pw);
+    alert("Password changed");
+  }
+}
+
+function logout() {
+  currentUser = 'user';
+  render();
+  closeLoginModal();
+}
+function initChart() {
+  // Không dùng Chart.js nữa, chỉ cần clear canvas
+  const ctx = document.getElementById('myChart').getContext('2d');
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  updateChart();
+}
+
+function updateChart() {
+  const canvas = document.getElementById('myChart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Lấy dữ liệu
+  const labels = globalData.map(sensor => sensor.name);
+  const planData = globalData.map(sensor => sensor.plan[1]);
+  const resultData = globalData.map(sensor => sensor.result[1]);
+
+  // Vẽ trục
+  const padding = 40;
+  const w = canvas.width = canvas.offsetWidth;
+  const h = canvas.height;
+  const n = labels.length;
+  const maxY = Math.max(...planData, ...resultData) * 1.2 || 10;
+  const minY = 0;
+
+  // Vẽ trục Y
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, h - padding);
+  ctx.lineTo(w - padding, h - padding);
+  ctx.strokeStyle = '#888';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Vẽ nhãn Y
+  ctx.fillStyle = '#333';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 5; i++) {
+    const yVal = minY + (maxY - minY) * (i / 5);
+    const y = h - padding - (h - 2 * padding) * (i / 5);
+    ctx.fillText(Math.round(yVal), padding - 5, y + 4);
+    ctx.beginPath();
+    ctx.moveTo(padding - 3, y);
+    ctx.lineTo(padding, y);
+    ctx.stroke();
+  }
+
+  // Vẽ nhãn X
+  ctx.textAlign = 'center';
+  for (let i = 0; i < n; i++) {
+    const x = padding + (w - 2 * padding) * (i / (n - 1 || 1));
+    ctx.fillText(labels[i], x, h - padding + 18);
+  }
+
+  // Hàm chuyển giá trị thành toạ độ canvas
+  function getXY(i, val) {
+    const x = padding + (w - 2 * padding) * (i / (n - 1 || 1));
+    const y = h - padding - (h - 2 * padding) * ((val - minY) / (maxY - minY || 1));
+    return [x, y];
+  }
+
+  // Vẽ line Plan
+  ctx.beginPath();
+  planData.forEach((val, i) => {
+    const [x, y] = getXY(i, val);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = 'rgb(75,192,192)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Vẽ line Result
+  ctx.beginPath();
+  resultData.forEach((val, i) => {
+    const [x, y] = getXY(i, val);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = 'rgb(255,99,132)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Vẽ chấm tròn cho từng điểm
+  planData.forEach((val, i) => {
+    const [x, y] = getXY(i, val);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgb(75,192,192)';
+    ctx.fill();
+  });
+  resultData.forEach((val, i) => {
+    const [x, y] = getXY(i, val);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgb(255,99,132)';
+    ctx.fill();
+  });
+
+  // Vẽ chú thích
+  ctx.fillStyle = 'rgb(75,192,192)';
+  ctx.fillRect(w - 120, padding, 12, 12);
+  ctx.fillStyle = '#333';
+  ctx.fillText('Plan', w - 100, padding + 11);
+  ctx.fillStyle = 'rgb(255,99,132)';
+  ctx.fillRect(w - 60, padding, 12, 12);
+  ctx.fillStyle = '#333';
+  ctx.fillText('Result', w - 40, padding + 11);
+}
+// --- end script.js ---
+  </script>
+  
 </body>
+
 </html>
 
