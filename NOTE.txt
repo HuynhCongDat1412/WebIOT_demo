@@ -1,0 +1,19 @@
+
+//Col Row
+tạo grid cho trang để bố cục các thành phần trong trang. tự sắp xếp khi trang rộng hoặc hẹp
+
+//container
+tạo container để chứa các thành phần riêng lẻ
+
+//col-md-4 
+
+//mb-4
+
+//g-3
+
+//h-100
+
+//w-100
+
+
+//btn

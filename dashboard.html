@@ -3,11 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Sensor Dashboard</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <!-- Custom Stylesheet -->
+
    <style>
     body {
   font-family: Arial, Helvetica, sans-serif;
@@ -75,13 +71,14 @@
 }
 .card {
   background: #fff;
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  padding: 20px;
-  min-width: 260px;
-  max-width: 320px;
+  /* padding: 20px; */
+  min-width: 360px;
+  max-width: 100%;
   flex: 1 1 300px;
   margin-bottom: 0;
+  justify-content: center;
 }
 
 /* Chart container */
@@ -180,6 +177,98 @@
 .text-primary { color: #0d6efd !important; }
 .text-dark { color: #212529 !important; }
 .p-2 { padding: 0.5rem; }
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  background: #414141;
+  border-radius: 1px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+  .card2 {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 20px;
+    min-width: 260px;
+    max-width: 320px;
+    flex: 1 1 300px;
+    margin-bottom: 0;
+    position: relative;
+    display: flex;
+  }
+
+  .card-title {
+    background: #ffc107;
+    color: #212529;
+    border-radius: 20px 20px 0 0;
+    /* padding: 10px; */
+    font-weight: bold;
+    justify-content: center;
+  }
+  .card-body02 {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: 20px; */
+  }
+  .col-md-4 {
+    flex: 1 1 300px;
+    margin-bottom: 20px;
+  }
+  mb-4 {
+    margin-bottom: 1.5rem;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    
+    /* padding: 20px; */
+  }
+  .g-3 {
+    gap: 1rem;
+  }
+  .w-100 {
+    width: 100%;
+  }
+  .h-100 {
+    height: 100%; 
+  }
+  .btn{
+    padding: 8px 16px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-warning {
+    background: #ffc107;
+    color: #212529;
+  }
+  .btn-success {
+    background: #00ff1e;
+    color: #000000;
+  }
+ .btn-danger {
+    background: #dc3545;
+    color: #fff;
+  }
    </style>
 </head>
 <body>
@@ -203,11 +292,11 @@
 <CENTER>
     <div id="tab1">
       <!-- Sensor cards container -->
-      <div id="card-container" class="row g-3">
+      <div id="card-container" class="row container g-3">
         <!-- Card sẽ được render bằng JS, mỗi card là col-md-4 mb-4 -->
       </div>
       <!-- Chart container -->
-      <div class="mt-4 w-100 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5">
+      <div class="mt-4 w-100 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-5 container">
         <canvas id="myChart" height="150" style="width: 100%;"></canvas>
       </div>
     </div>
@@ -286,7 +375,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Custom Script -->
   <script>
-    let currentUser = 'admin'; // 'user', 'staff', 'admin'
+    let currentUser = 'user'; // 'user', 'staff', 'admin'
 let passwords = { staff: '1234', admin: 'admin' };
 const savedPw = localStorage.getItem('passwords');
 let flag = 1;
@@ -368,16 +457,46 @@ function renderTab1() {
     card.className = 'col-md-4 mb-4';
     card.innerHTML = `
       <div class="card h-100">
+        <div class="row card-title">
+            <div class="col">
+              <p style="padding:0px 90px 20px 0px">ID: ${data.id}</p>
+            </div>
+            <div class="col">
+              <h2 >${data.name}</h2>
+            </div>
+            <div class="col">
+              <p style="padding:0px 0px 20px 90px">State: ${data.state[1]}</p>
+            </div>
+        </div>
         <div class="card-body">
-          <h5 class="card-title">${data.name}</h5>
-          <p class="mb-1">ID: ${data.id}</p>
-          <p class="mb-1">State: ${data.state[1]}</p>
-          <p class="mb-1">Plan: ${data.plan[1]}</p>
-          <p class="mb-3">Result: ${data.result[1]}</p>
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-warning" onclick="openSetting(${data.id})">Setting</button>
-            <button class="btn btn-success" onclick="click_run(${data.id})">Run</button>
-            <button class="btn btn-danger" onclick="click_reset(${data.id})">Reset</button>
+          <div class="row">
+            <div style="padding:0px 0px 0px 50px" class="col">
+              <h2 >Plan:</h2>
+            </div>
+            <div style="padding:0px 0px 0px 70px" class="col">
+              <h2 >${data.plan[1]}</h2>
+            </div>
+          </div>
+          <div class="row">
+            <div style="padding:0px 0px 0px 50px" class="col">
+              <h2 >Result:</h2>
+            </div>
+            <div style="padding:0px 0px 0px 50px" class="col">
+              <h2 >${data.result[1]}</h2>
+            </div>
+          </div>
+          <div style=" align-items: center;" class="d-flex justify-content-between">
+            <div style="padding:10px 20px 10px 20px"class="row">
+              <div style="padding:10px 50px 10px 10px" class="col">
+                <button style="padding:10px 20px 10px 20px" class="btn btn-warning" onclick="openSetting(${data.id})">Setting</button>
+              </div>
+              <div class="col">
+                <button style="padding:10px 20px 10px 20px" class="btn btn-success" onclick="click_run(${data.id})">Run</button>
+              </div>
+              <div style="padding:10px 10px 10px 50px" class="col">
+                <button class="btn btn-danger" onclick="click_reset(${data.id})">Reset</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -598,7 +717,6 @@ function click_reset(id){
     console.log(JSON.stringify({"cmnd":"setModbusValue","id":1,"type":"word","address":parseInt(dataObj.state[0]),"value":"0"}));
   }
 }
-
 function openSetting(id) {
   if (currentUser === 'user') return;
   const data = globalData.find(d => d.id === id);
@@ -626,8 +744,9 @@ function openSetting(id) {
   document.getElementById('modal-body').innerHTML = script;
   document.getElementById('modal-id').textContent = id;
   document.getElementById('nameInput').value = data.name;
-  // Hiển thị modal thuần JS
-  document.getElementById('settingModal').classList.remove('d-none');
+  // Hiển thị modal đúng chuẩn Bootstrap
+  const modal = new bootstrap.Modal(document.getElementById('settingModal'));
+  modal.show();
 }
 
 function closeSettingModal() {
